@@ -14,6 +14,8 @@ export const AuthProvider = ({ children }) => {
 
     const navigate = useNavigate()
 
+
+
     let loginUser = async (e ) => {
         e.preventDefault()
         let response = await fetch('http://127.0.0.1:8000/api/token/', {
@@ -35,6 +37,8 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+
+
     let logoutUser = () => {
         setAuthTokens()
         setUser()
@@ -42,15 +46,15 @@ export const AuthProvider = ({ children }) => {
         navigate('home')
     }
 
+
+
     let updateToken = async ()=> {
-        // preventDefault()
-        console.log('update worked uWu')
         let response = await fetch('http://127.0.0.1:8000/api/token/refresh/', {
             method: 'POST',
             headers:{
                 'Content-Type':'application/json'
             },
-            body:JSON.stringify({'refresh': authTokens.refresh})
+            body:JSON.stringify({'refresh': authTokens?.refresh})
         })
         let data = await response.json()
         
@@ -61,10 +65,17 @@ export const AuthProvider = ({ children }) => {
         }else{
             logoutUser()
         }
+
+        if(loading){
+            setLoading(false)
+        }
     }
 
-    useEffect(()=> {
 
+    useEffect(()=> {
+        if(loading){
+            updateToken()
+        }
         let fourMinutes = 1000 * 60 * 4
         let interval = setInterval(()=> {
             if(authTokens){
@@ -75,9 +86,11 @@ export const AuthProvider = ({ children }) => {
 
     }, [authTokens, loading])
 
+
+
     return(
-        <AuthContext.Provider value={{ loginUser, logoutUser, user }}>
-            { children }
+        <AuthContext.Provider value={{ loginUser, logoutUser, user, authTokens }}>
+            { loading ? null : children }
         </AuthContext.Provider>
     )
 }
