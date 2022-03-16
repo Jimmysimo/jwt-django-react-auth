@@ -1,3 +1,7 @@
+// This is depreciated
+// Replaced with logic in UseAxios
+// Updated to use axios hook over check local storage method 
+
 import axios from 'axios'
 import jwt_decode from "jwt-decode";
 import dayjs from 'dayjs'
